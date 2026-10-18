@@ -7,7 +7,8 @@
 In addition to the [Prerequisites](../README.md#prerequisites) listed in the README you
 will need the following to develop `pycliche`:
 
-- [pre-commit](https://pre-commit.com/)
+- [prek](https://prek.j178.dev/)
+- [shellcheck](https://www.shellcheck.net/) (needed by the `actionlint` pre-commit hook)
 
 ### Recursive pycliche
 
@@ -42,19 +43,15 @@ uv add some-package
 
 #### Updating dependencies in the template
 
-There are two places where dependencies are currently declared in the template:
+Python dependencies and `prek` hook revisions are updated by the weekly
+`update-project-tooling` workflow. In this repository, the workflow runs
+`.github/scripts/update-project-tooling.py`, updates the root `pyproject.toml`,
+refreshes `uv.lock`, and updates the template `pyproject.toml.jinja` and
+`prek.toml.jinja` files.
 
-1. `.pre-commit-config.yaml`
-1. `pyproject.toml.jinja`
-
-Update git hooks in the former via:
-
-```sh
-cd template/ && pre-commit autoupdate
-```
-
-Update Python packages in the latter manually. Automated option pending on account of
-commands like `uv lock --upgrade-package` not taking kindly to Jinja templates.
+Generated GitHub projects include their own `update-project-tooling` workflow and script.
+That generated workflow updates the generated project's `prek.toml`; Dependabot remains
+configured in generated projects for Python dependency updates.
 
 ### Generate project using development version
 
@@ -70,29 +67,31 @@ uvx copier copy --vcs-ref=HEAD pycliche $TEST_PROJECT_NAME
 
 ### Style
 
-Code style is enforced by pre-commit hooks. Linter rules are configured in the `ruff`
-tables in `pyproject.toml`.
+Code style is enforced by `prek` pre-commit hooks. Linter rules are configured in the
+`ruff` tables in `pyproject.toml`.
 
 ```sh
 # before you start developing, install pre-commit hooks
-pre-commit install
+prek install
 
 # update pre-commit hooks
-pre-commit autoupdate
+prek autoupdate
 ```
 
 Docstrings should follow the conventions set out in the [Google styleguide](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
 
 Please follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
-guidelines when writing commit messages. `commitlint` is enabled as
-pre-commit hook. Valid commit types are defined in `.commitlintrc.ts`.
+guidelines when writing commit messages. `commitlint` is enabled as a pre-commit hook.
+Valid commit types are defined in `.commitlintrc.ts`.
 
 ## Test
 
-Run all `pytest` tests with:
-
 ```sh
+# Run all `pytest` tests (in parallel by default)
 nox
+
+# Run tests with the debugger enabled (serial execution due to `pdb`)
+nox -- --pdb
 ```
 
 By default this will only run the `nox` session for the latest supported Python release.
@@ -117,12 +116,12 @@ nox -- -m unit
 nox -- -m "not smoke"
 ```
 
-See the `tool.pytest.ini_options` table in `pyproject.toml` for a list of all marks.
+See the `tool.pytest` table in `pyproject.toml` for a list of all marks.
 
 Nox is used to automate testing across different Python versions. Test sessions are
 configured via `noxfile.py`.
 
-## Tests in GitHub Actions
+### Tests in GitHub Actions
 
 A matrix strategy is used for the `test` GitHub Action. This runs each Nox session
 (i.e. Python version test run) as a separate pipeline job.

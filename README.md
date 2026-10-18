@@ -12,12 +12,12 @@
 Embracing [Boring Technology](https://boringtechnology.club/), fighting bloat, striving for
 simplicity.
 
-[![python: 3.12](https://img.shields.io/badge/>=3.12-4584b6?logo=python&logoColor=ffde57)](https://docs.python.org/3.12/whatsnew/3.12.html)
+[![python: 3.13](https://img.shields.io/badge/>=3.13-4584b6?logo=python&logoColor=ffde57)](https://docs.python.org/3.13/whatsnew/3.13.html)
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/albertomh/pycliche/main/docs/media/copier-badge.json)](https://github.com/copier-org/copier)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json&labelColor=261230&color=de60e9)](https://github.com/astral-sh/uv)
 [![IPython](https://img.shields.io/badge/IP[y]:-3465a4)](https://ipython.readthedocs.io/en/stable/)
 [![structlog](https://img.shields.io/badge/🪵_structlog-b9a198)](https://github.com/hynek/structlog)
-[![pre-commit](https://img.shields.io/badge/pre--commit-FAB040?logo=pre-commit&logoColor=1f2d23)](https://github.com/pre-commit/pre-commit)
+[![prek](https://img.shields.io/badge/prek-CC5A23?logo=prek&logoColor=FFFFFF)](https://github.com/j178/prek)
 [![ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json&labelColor=261230&color=d8ff64)](https://github.com/astral-sh/ruff)
 [![pytest](https://img.shields.io/badge/pytest-0A9EDC?logo=pytest&logoColor=white)](https://github.com/pytest-dev/pytest)
 [![coverage](https://img.shields.io/badge/😴_coverage-59aabd)](https://coverage.readthedocs.io/)
@@ -34,13 +34,13 @@ Projects created using `pycliche` include:
 - Simple configuration to enhance your logs with `structlog`.
 - Scaffolding for unit tests run via `pytest`.
 - Out-of-the-box code coverage reporting with `coverage.py`.
-- Batteries-included `pre-commit` hook configuration to lint & format code, and run SAST.
+- Batteries-included `prek` pre-commit hook configuration to lint & format code, and run SAST.
 
 Optionally, for projects intended to be hosted on GitHub, also include:
 
 - GitHub Actions to:
   - Automate cutting releases via `Release Please`.
-  - Run `pre-commit` hooks and `pytest` as part of a Continuous Integration pipeline.
+  - Run `prek` pre-commit hooks and `pytest` as part of a Continuous Integration pipeline.
 - A `dependabot` configuration to keep Python packages & GitHub Actions up to date.
 
 <p align="center">
@@ -57,8 +57,11 @@ Optionally, for projects intended to be hosted on GitHub, also include:
 
 To use `pycliche` the following must be available locally:
 
-- [Python 3.12](https://docs.python.org/3.12/) or above
+- [Python 3.13](https://docs.python.org/3.13/) or above
 - [uv](https://docs.astral.sh/uv/)
+
+`pycliche` supports the last two versions of Python - the ones with bugfix support as per
+<https://devguide.python.org/versions/>.
 
 ## Bootstrap a new Python project
 
@@ -88,6 +91,39 @@ uvx copier update --skip-answered --trust [--vcs-ref=<TAG>]
 ```
 
 If the `--vcs-ref` flag is not specified `copier` will use the latest `pycliche` tag.
+
+## Make your package installable
+
+Projects generated using `pycliche` use the [hatchling build system](https://pypi.org/project/hatchling/)
+and the `uv` toolchain to package releases. Build a release by:
+
+```sh
+# merge a release-please PR to create a tag and a GitHub Release
+
+# check out the tag locally
+
+# in your project's root directory
+uv build
+
+# upload the artefacts as an asset linked to the release at
+# <https://github.com/myusername/mypackage/releases/tag/vM.m.p>
+```
+
+To use your package as a dependency in a project:
+
+```sh
+# add the following line to the dependencies table in `pyproject.toml`:
+"mypackage @ https://github.com/myusername/mypackage/releases/download/vM.m.p/mypackage-M.m.p-py3-none-any.whl"
+
+# update the project's virtual environment
+uv sync
+```
+
+You can also run modules directly once your package is installed as a dependency:
+
+```sh
+uv run python -m mypackage.some_module
+```
 
 ---
 

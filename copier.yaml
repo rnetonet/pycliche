@@ -6,30 +6,28 @@ project_name:
            (all-lowercase, may contain underscores)
     type: str
     validator: >-
-        {% if not (project_name | regex_search('^[a-z][a-z0-9\_]+$')) %}
+        {% if not (project_name | regex_search('^[a-z][a-z0-9_]+$')) %}
         project_name must start with a letter, be lowercase and may contain underscores
         {% endif %}
 
-python_version:
-    help: "What version of Python do you wish to use?"
+min_python_version:
+    help: "What is the minimum compatible version of Python?"
     type: str
     choices:
-        - "3.12"
         - "3.13"
-    default: "3.12"
+        - "3.14"
+    default: "3.13"
 
 author_name:
     help: "Who is the project's author?"
     type: str
-    default: "Alberto Morón Hernández"
     validator: "{% if author_name == '' %}author_name cannot be empty{% endif %}"
 
 author_email:
     help: "What is the project author's email?"
     type: str
-    default: "alberto.moronh@gmail.com"
     validator: >-
-        {% if not (author_email | regex_search('^[^@]+@[^@]+\.[^@]+$')) %}
+        {% if not (author_email | regex_search('^[^@]+@[^@]+\\.[^@]+$')) %}
         author_email must be an email address
         {% endif %}
 
@@ -43,9 +41,15 @@ initial_version:
 is_github_project:
     help: |
         Will this project be hosted on GitHub?
-           (if 'yes', generates GitHub Actions for 'Release Please', 'pre-commit', 'dependabot')
+           (if 'yes', generates GitHub Actions for 'Release Please', 'prek', 'dependabot')
     type: bool
     default: yes
+
+_message_after_copy: |
+    Your project is ready!
+    REMINDER:
+    - Fill out the `description` and `repository` fields in pyproject.toml.
+    - Please update the LICENSE file with your license details.
 
 _tasks:
     - "git init"

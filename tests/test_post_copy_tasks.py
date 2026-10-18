@@ -1,7 +1,7 @@
 # Test the effects of the tasks that run after generating or updating a project.
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 import pytest
 
@@ -10,7 +10,7 @@ from tests.conftest import is_git_repo
 
 @pytest.mark.integration
 @pytest.mark.smoke
-def test_is_git_repo(
+def test_project_is_initialized_as_git_repo(
     copier_copy: Callable[[dict], None],
     copier_input_data: dict,
     test_project_dir: Path,
@@ -31,3 +31,20 @@ def test_uv_lockfile_exists(
 
     uv_lock_file = test_project_dir / "uv.lock"
     assert uv_lock_file.exists(), f"Expected lock file {uv_lock_file} not found."
+
+
+@pytest.mark.integration
+@pytest.mark.smoke
+def test_generated_project_message_after_copy(
+    copier_copy: Callable[[dict], None],
+    copier_input_data: dict,
+    capsys: pytest.CaptureFixture[str],
+):
+    copier_copy(copier_input_data)
+    captured = capsys.readouterr()
+
+    assert (
+        "Fill out the `description` and `repository` fields in pyproject.toml."
+        in captured.err
+    )
+    assert "Please update the LICENSE file with your license details." in captured.err

@@ -1,9 +1,10 @@
 import shutil
+import uuid
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
+import copier
 import pytest
-from copier.cli import CopierApp
 from sh import ErrorReturnCode, git, python
 
 PYCLICHE_TEST_TEMP_DIR = Path("/", "tmp", "pycliche_test")
@@ -25,7 +26,7 @@ def pycliche_test_temp_dir() -> Path:
 
 @pytest.fixture
 def test_project_name() -> str:
-    return "test_project"
+    return f"test_project_{uuid.uuid4().hex[:8]}"
 
 
 @pytest.fixture
@@ -34,10 +35,10 @@ def test_project_dir(pycliche_test_temp_dir: Path, test_project_name: str) -> Pa
 
 
 @pytest.fixture
-def copier_input_data() -> dict:
+def copier_input_data(test_project_name: str) -> dict:
     """Answers to core pycliche template questions."""
     return {
-        "project_name": "test_project",
+        "project_name": test_project_name,
         "author_name": "Miguel de Cervantes",
         "author_email": "mike@alcala.net",
     }
@@ -47,37 +48,23 @@ def copier_input_data() -> dict:
 def copier_copy(
     pycliche_root_dir: Path, test_project_dir: Path
 ) -> Callable[[dict], None]:
-    """
-    Fixture to run `copier copy`, cleaning up destination directory beforehand.
-    Uses the `pycliche_root_dir` & `test_project_dir` fixtures as source and
-    destination directories respectively, so tests should use these fixtures
-    """
+    """Fixture to run `copier copy`, cleaning up destination directory beforehand.
 
-    def _quote_if_has_space(string: str) -> str:
-        if isinstance(string, str) and " " in string:
-            return f"'{string}'"
-        return string
+    Uses the `pycliche_root_dir` & `test_project_dir` fixtures as source and
+    destination directories respectively, so tests should use these fixtures.
+    """
 
     def _run(copier_input_data: dict):
         if test_project_dir.exists():
             shutil.rmtree(test_project_dir)
 
-        copier_args = ["--vcs-ref=HEAD", "--defaults", "--trust"]
-        copier_args.extend(
-            [f"--data={k}={_quote_if_has_space(v)}" for k, v in copier_input_data.items()]
-        )
-
-        # Use `CopierApp.run` because `run_copy` does not accept `--trust` as a flag,
-        # which is needed in order for post-creation tasks to run.
-        CopierApp.run(
-            [
-                "copier",
-                "copy",
-                *copier_args,
-                str(pycliche_root_dir),
-                str(test_project_dir),
-            ],
-            exit=False,
+        copier.run_copy(
+            str(pycliche_root_dir),
+            test_project_dir,
+            data=copier_input_data,
+            vcs_ref="HEAD",
+            defaults=True,
+            unsafe=True,
         )
 
     return _run
@@ -86,7 +73,7 @@ def copier_copy(
 def pytest_sessionstart(session):
     """Hook to perform initial setup before all tests."""
     if not PYCLICHE_TEST_TEMP_DIR.exists():
-        PYCLICHE_TEST_TEMP_DIR.mkdir()
+        PYCLICHE_TEST_TEMP_DIR.mkdir(exist_ok=True)
 
 
 @pytest.fixture
@@ -109,6 +96,7 @@ def is_git_repo(path: Path) -> bool:
     """Check if the given path is a Git repository."""
     try:
         git("-C", str(path), "status")
-        return True
     except ErrorReturnCode:
         return False
+    else:
+        return True

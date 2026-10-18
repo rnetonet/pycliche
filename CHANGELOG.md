@@ -8,6 +8,208 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This file is automatically updated by Release Please.
 
+## [2.33.0](https://github.com/albertomh/pycliche/compare/v2.32.1...v2.33.0) (2026-09-05)
+
+
+### Features
+
+* **ci:** Automate project tooling updates ([#254](https://github.com/albertomh/pycliche/issues/254)) ([f904955](https://github.com/albertomh/pycliche/commit/f904955395188e05d3bf68f2844c283ab7266399))
+* **ci:** Automate updating GitHub Actions SHA pins ([#251](https://github.com/albertomh/pycliche/issues/251)) ([c98fa20](https://github.com/albertomh/pycliche/commit/c98fa20d467a651f8521dbfbf67e228d22326b5f))
+
+## [2.32.1](https://github.com/albertomh/pycliche/compare/v2.32.0...v2.32.1) (2026-08-21)
+
+
+### Miscellaneous Chores
+
+* **ci:** Use Ubuntu 26.04 as the GitHub Actions runner image ([#225](https://github.com/albertomh/pycliche/issues/225)) ([4a471ef](https://github.com/albertomh/pycliche/commit/4a471ef86b17b2493613b87f9eabcff205dba64d))
+
+## [2.32.0](https://github.com/albertomh/pycliche/compare/v2.31.1...v2.32.0) (2026-08-09)
+
+
+### Features
+
+* **test:** Treat warnings as errors in nox test runs ([#244](https://github.com/albertomh/pycliche/issues/244)) ([542a6b3](https://github.com/albertomh/pycliche/commit/542a6b33c63e238a84ec0369654877914ebac244))
+
+
+### Bug Fixes
+
+* Allow nox env to inherit system env vars ([#242](https://github.com/albertomh/pycliche/issues/242)) ([4ec1bc6](https://github.com/albertomh/pycliche/commit/4ec1bc6d28231e166a9d9a63c5f4ea06adb61132))
+
+## [2.31.1](https://github.com/albertomh/pycliche/compare/v2.31.0...v2.31.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* **ci:** Fix PR workflow trigger condition ([#232](https://github.com/albertomh/pycliche/issues/232)) ([2479136](https://github.com/albertomh/pycliche/commit/247913612223fbd42adca68d32d73f03ac8b5529))
+
+## [2.31.0](https://github.com/albertomh/pycliche/compare/v2.30.0...v2.31.0) (2026-06-30)
+
+
+### Features
+
+* Failsafe version fetch for envs where package not installed ([#229](https://github.com/albertomh/pycliche/issues/229)) ([a5be2b9](https://github.com/albertomh/pycliche/commit/a5be2b9aa3f406b912f21474de8051314cc669b9))
+
+
+### Bug Fixes
+
+* **test:** Ensure coverage data files are combined for accuracy ([#228](https://github.com/albertomh/pycliche/issues/228)) ([c7ecebb](https://github.com/albertomh/pycliche/commit/c7ecebb8fd2995c14343c6a07a65fbdba01def4d))
+
+## [2.30.0](https://github.com/albertomh/pycliche/compare/v2.29.0...v2.30.0) (2026-05-04)
+
+
+### Features
+
+* **deps:** Bump wntrblm/nox to 2026.04.10 ([#218](https://github.com/albertomh/pycliche/issues/218)) ([871e279](https://github.com/albertomh/pycliche/commit/871e2797d5a125bc5aed97d5db5a053140b087c0))
+* Stop ignoring major versions in dependabot checks ([#216](https://github.com/albertomh/pycliche/issues/216)) ([9fc4f21](https://github.com/albertomh/pycliche/commit/9fc4f21f8cb7a86c7468d66ca7967a45c8335ab2))
+
+## [2.29.0](https://github.com/albertomh/pycliche/compare/v2.28.0...v2.29.0) (2026-03-31)
+
+
+### Features
+
+* Limit candidate packages to those older than seven days ([#206](https://github.com/albertomh/pycliche/issues/206)) ([efde63f](https://github.com/albertomh/pycliche/commit/efde63f67186ba322149858f1596663f2a0195c4))
+* Run ruff-specific lint rules ([#204](https://github.com/albertomh/pycliche/issues/204)) ([9c44976](https://github.com/albertomh/pycliche/commit/9c449762150ed09e8860f5476e24d46f810dbb80))
+
+## [2.28.0](https://github.com/albertomh/pycliche/compare/v2.27.0...v2.28.0) (2026-02-28)
+
+
+### Features
+
+* Add extra Ruff rules for more opinionated linting ([#189](https://github.com/albertomh/pycliche/issues/189)) ([80f1d18](https://github.com/albertomh/pycliche/commit/80f1d18a272ffcbcb6bd9195e164c52c0f011bbc))
+* Add post-copy reminder to fill out pyproject.toml fields ([#196](https://github.com/albertomh/pycliche/issues/196)) ([e18845f](https://github.com/albertomh/pycliche/commit/e18845fb47d7ba8783dd8fee15d804586d336e42))
+* Add reminders for post-copy tasks ([#194](https://github.com/albertomh/pycliche/issues/194)) ([70238df](https://github.com/albertomh/pycliche/commit/70238df4e3c3d42e325a71f6530ea27fe9d8b8de))
+* Add script CLI entrypoint via [project.scripts] ([#192](https://github.com/albertomh/pycliche/issues/192)) ([f76c7f5](https://github.com/albertomh/pycliche/commit/f76c7f54122f7928d9e416de2c9ddc1c190cd06a))
+* Add stack trace and context support to logger ([#201](https://github.com/albertomh/pycliche/issues/201)) ([9ccadf2](https://github.com/albertomh/pycliche/commit/9ccadf230084b9f0b4e9a6d3544569970c709919))
+* Adopt src layout for generated projects ([#195](https://github.com/albertomh/pycliche/issues/195)) ([d7d52c2](https://github.com/albertomh/pycliche/commit/d7d52c2035cf3a730ae915394ea19f74da6b5b0f))
+* Declare uv-build as the build backend ([#188](https://github.com/albertomh/pycliche/issues/188)) ([e7032c0](https://github.com/albertomh/pycliche/commit/e7032c04ba25cc0f6c3eab2b50293d3ac743ea9c))
+* **deps:** Bump wntrblm/nox to 2026.02.09 ([#186](https://github.com/albertomh/pycliche/issues/186)) ([2b8ded4](https://github.com/albertomh/pycliche/commit/2b8ded49f13059d7acb7aca6de4407e345edfbe0))
+* Implement dual-mode logging (JSON on non-TTY, Console on TTY) ([#190](https://github.com/albertomh/pycliche/issues/190)) ([0e7099a](https://github.com/albertomh/pycliche/commit/0e7099ab8b145ceb6b73464253b150a57e4cd410))
+* Read LOG_FORMAT to override detected log environment ([#193](https://github.com/albertomh/pycliche/issues/193)) ([54afef1](https://github.com/albertomh/pycliche/commit/54afef13631fd06e2573803da18383de29a61fd2))
+* **test:** Check behaviour of gen. project entrypoint ([#199](https://github.com/albertomh/pycliche/issues/199)) ([5ca91e1](https://github.com/albertomh/pycliche/commit/5ca91e1af01db732cc98d0106c108ffcf756192c))
+
+
+### Bug Fixes
+
+* Simplify version imports ([#202](https://github.com/albertomh/pycliche/issues/202)) ([7e7bc7b](https://github.com/albertomh/pycliche/commit/7e7bc7badf97b92963465ddd42abc1be04365ee7))
+* **tests:** Resolve pytest warnings ([#191](https://github.com/albertomh/pycliche/issues/191)) ([ed55b20](https://github.com/albertomh/pycliche/commit/ed55b206425f814fa24d155c82b89fc30ae2ff6d))
+
+
+### Dependencies
+
+* Move ipython to dev dependencies ([#198](https://github.com/albertomh/pycliche/issues/198)) ([0ebcca8](https://github.com/albertomh/pycliche/commit/0ebcca8396131f10f8b5a44fd79a1b015cae988e))
+
+
+### Documentation
+
+* Simplify project setup instructions using 'uv' ([#200](https://github.com/albertomh/pycliche/issues/200)) ([639ef60](https://github.com/albertomh/pycliche/commit/639ef60b16456b0fd3035590e6f0737b0d6263a3))
+
+## [2.27.0](https://github.com/albertomh/pycliche/compare/v2.26.0...v2.27.0) (2026-02-14)
+
+
+### Features
+
+* Use 'prek' for pre-commit hooks in generated projects ([#183](https://github.com/albertomh/pycliche/issues/183)) ([64f1038](https://github.com/albertomh/pycliche/commit/64f1038281deed74efaba843f9c7a96ed53144cc))
+
+
+### Dependencies
+
+* **test:** Bump pip to 26.0.1 ([#181](https://github.com/albertomh/pycliche/issues/181)) ([8b45cb0](https://github.com/albertomh/pycliche/commit/8b45cb0bc772e10fe883bde82d37dcaeeedd0abd))
+
+
+### Documentation
+
+* How to build installable packages from a project ([#177](https://github.com/albertomh/pycliche/issues/177)) ([6fc9bc3](https://github.com/albertomh/pycliche/commit/6fc9bc3140a1b217d26121521ad480a20d1c7bf1))
+
+## [2.26.0](https://github.com/albertomh/pycliche/compare/v2.25.0...v2.26.0) (2025-11-25)
+
+
+### Features
+
+* **deps:** Bump dependencies ([#176](https://github.com/albertomh/pycliche/issues/176)) ([809bc05](https://github.com/albertomh/pycliche/commit/809bc05e824cd4956b31041598681cd2d6f67f0a))
+
+
+### Dependencies
+
+* **ci:** Bump versions of third-party CI actions ([#173](https://github.com/albertomh/pycliche/issues/173)) ([348c0dd](https://github.com/albertomh/pycliche/commit/348c0dde754d3c27b79e87829b2580fe59283910))
+
+## [2.25.0](https://github.com/albertomh/pycliche/compare/v2.24.0...v2.25.0) (2025-11-10)
+
+
+### Features
+
+* **deps:** Add 'pytest-cov' for coverage reporting with xdist ([#166](https://github.com/albertomh/pycliche/issues/166)) ([567528c](https://github.com/albertomh/pycliche/commit/567528cdcce6175ae4326bb89aa040742f59ec3e))
+* **deps:** Bump dependencies; upgrade to pytest v9 ([#170](https://github.com/albertomh/pycliche/issues/170)) ([a2a51e0](https://github.com/albertomh/pycliche/commit/a2a51e04e3e355c296d0bcbd56390ab33b17cded))
+* **test:** Omit reporting files with 100% coverage ([#169](https://github.com/albertomh/pycliche/issues/169)) ([b603b66](https://github.com/albertomh/pycliche/commit/b603b6607d9b1ef5122a48ebd4f7c1285c669a51))
+
+## [2.24.0](https://github.com/albertomh/pycliche/compare/v2.23.0...v2.24.0) (2025-10-29)
+
+
+### Features
+
+* **deps:** Bump wntrblm/nox to 2025.10.16 ([#163](https://github.com/albertomh/pycliche/issues/163)) ([6dc5c37](https://github.com/albertomh/pycliche/commit/6dc5c372cdb0914348acc8faa67df009cacfe7de))
+
+## [2.23.0](https://github.com/albertomh/pycliche/compare/v2.22.0...v2.23.0) (2025-10-12)
+
+
+### Features
+
+* **deps:** Update dependencies in gen. project & metaproject ([#156](https://github.com/albertomh/pycliche/issues/156)) ([ed02543](https://github.com/albertomh/pycliche/commit/ed025431ee64b58243a8e145c4aa40184ebccff6))
+
+
+### Bug Fixes
+
+* **ci:** Remove prune-cache from setup-uv (fixed upstream) ([#157](https://github.com/albertomh/pycliche/issues/157)) ([e6ae832](https://github.com/albertomh/pycliche/commit/e6ae83268793049108e5cb33b25adc37c3ca206e))
+
+## [2.22.0](https://github.com/albertomh/pycliche/compare/v2.21.0...v2.22.0) (2025-10-10)
+
+
+### Features
+
+* Enable creating Python 3.14 projects ([#154](https://github.com/albertomh/pycliche/issues/154)) ([bfe31c1](https://github.com/albertomh/pycliche/commit/bfe31c12c88c7b58299944eb53e438ff8deafcec))
+
+## [2.21.0](https://github.com/albertomh/pycliche/compare/v2.20.0...v2.21.0) (2025-10-04)
+
+
+### Features
+
+* Add 'typos' pre-commit hook ([#152](https://github.com/albertomh/pycliche/issues/152)) ([364ece8](https://github.com/albertomh/pycliche/commit/364ece88d717276703ca0fc2ba2efb54d1756bd6))
+
+## [2.20.0](https://github.com/albertomh/pycliche/compare/v2.19.0...v2.20.0) (2025-10-02)
+
+
+### Features
+
+* Add project.urls table to pyproject.toml ([#149](https://github.com/albertomh/pycliche/issues/149)) ([ecdd136](https://github.com/albertomh/pycliche/commit/ecdd13691a5a09983e856e22b7e2fae7c73d13cf))
+
+
+### Bug Fixes
+
+* **ci:** Avoid 'setup-uv' hanging with 'prune-cache: false' ([#151](https://github.com/albertomh/pycliche/issues/151)) ([91b1c14](https://github.com/albertomh/pycliche/commit/91b1c14a974f5bed31125189cfe7400a896a8c50))
+
+## [2.19.0](https://github.com/albertomh/pycliche/compare/v2.18.0...v2.19.0) (2025-09-25)
+
+
+### Features
+
+* **ci:** Cache generating sessions used by nox ([#146](https://github.com/albertomh/pycliche/issues/146)) ([b6a20d3](https://github.com/albertomh/pycliche/commit/b6a20d390381f88f9b86f5ddf6b93895680c5b8e))
+* **ci:** Enable caching for the setup-uv step ([#142](https://github.com/albertomh/pycliche/issues/142)) ([8638e5b](https://github.com/albertomh/pycliche/commit/8638e5bad61ce2f9077af0d45f93a86511804c6d))
+* Derive nox Python versions from user's min Python choice ([#148](https://github.com/albertomh/pycliche/issues/148)) ([08055e9](https://github.com/albertomh/pycliche/commit/08055e93659e1c3624e0e421c309622a5b77560d))
+
+
+### Documentation
+
+* **ci:** Document minting PATs for Release Please CI jobs ([#147](https://github.com/albertomh/pycliche/issues/147)) ([8dedae3](https://github.com/albertomh/pycliche/commit/8dedae3eb014bbfcaf2c7e4ecc60f5fe181ab3b3))
+
+## [2.18.0](https://github.com/albertomh/pycliche/compare/v2.17.1...v2.18.0) (2025-09-23)
+
+
+### Features
+
+* Skip slow tests locally, only run in CI ([#133](https://github.com/albertomh/pycliche/issues/133)) ([eda3677](https://github.com/albertomh/pycliche/commit/eda367737177405c2da7d5e7847b748889eb259d))
+* **test:** Randomise order of tests in gen. project ([#136](https://github.com/albertomh/pycliche/issues/136)) ([c239f19](https://github.com/albertomh/pycliche/commit/c239f19770012a2b10ebd4358ef616b5f631fde3))
+* **tests:** Add exclusions to reduce noise in coverage report ([#138](https://github.com/albertomh/pycliche/issues/138)) ([e1d91f1](https://github.com/albertomh/pycliche/commit/e1d91f15f3b45df0893f0f2ada5ed49f4fd08533))
+* **tests:** Run gen. project's tests in parallel, serial if pdb ([#141](https://github.com/albertomh/pycliche/issues/141)) ([f8d760d](https://github.com/albertomh/pycliche/commit/f8d760dfcec9e5cc131fad8645297ef5fd730fbc))
+
 ## [2.17.1](https://github.com/albertomh/pycliche/compare/v2.17.0...v2.17.1) (2025-08-14)
 
 

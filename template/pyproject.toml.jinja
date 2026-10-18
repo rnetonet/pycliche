@@ -4,27 +4,48 @@ name = "{{project_name}}"
 version = "{{initial_version}}"
 description = ""
 authors = [
-  {name = "{{author_name}}", email = "{{author_email}}"}
+    {name = "{{author_name}}", email = "{{author_email}}"}
 ]
 readme = "README.md"
 license-files = ["LICENSE"]
-requires-python = ">={{python_version}}"
+requires-python = ">={{min_python_version}}"
 dependencies = [
-    "ipython>=9.0.2,<10.0.0",
-    "structlog>=25.2.0,<26.0.0",
+    "structlog>=26.1.0,<27.0.0",
 ]
+
+[project.scripts]
+{{project_name}} = "{{project_name}}.main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.7,<0.13.0"]
+build-backend = "uv_build"
 
 [dependency-groups]
+dev = [
+    "ipython>=9.17.0,<10.0.0",
+]
 test = [
-    "coverage>=7.6.7",
-    "pytest>=8.3.3",
+    "coverage>=7.16.0,<8.0.0",
+    "pytest>=9.1.1,<10.0.0",
+    "pytest-randomly>=4.1.0,<5.0.0",
+    "pytest-xdist>=3.8.0,<4.0.0",
 ]
 
-[tool.setuptools]
-packages = ["{{project_name}}"]
+{% if is_github_project %}
+[project.urls]
+Repository = "https://github.com"
+{% endif %}
 
-[tool.pytest.ini_options]
+[tool.uv]
+exclude-newer = "7 days"
+
+[tool.uv.build-backend]
+module-name = ["{{project_name}}"]
+module-root = "src"
+
+[tool.pytest]
 addopts = [
+    "--strict-markers",
     "--pdbcls=IPython.terminal.debugger:TerminalPdb",
 ]
 markers = [
@@ -36,27 +57,39 @@ markers = [
 
 [tool.coverage.report]
 omit = [
-  "*/tests/*"
+    "*/__init__.py",
+    "noxfile.py",
+    "*/tests/*"
 ]
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
     "def __str__",
     "if settings.debug",
+    "if TYPE_CHECKING",
 ]
+
+[tool.coverage.run]
+source = [
+    "src/{{project_name}}/",
+]
+omit = [
+    "*/tests/*"
+]
+parallel = true
+concurrency = ["multiprocessing"]
 
 [tool.ruff]
 exclude = [".pdbrc"]
 indent-width = 4
 line-length = 90
-target-version = "py{{python_version.replace('.', '')}}"
 
 [tool.ruff.lint]
 ignore = []
 select = [
     # flake8-bugbear
     "B",
-    # pydocstyle
+    # pycodestyle errors
     "E",
     # isort
     "I",
@@ -68,23 +101,29 @@ select = [
     "G",
     # flake8-logging
     "LOG",
+    # pylint-pl
+    "PL",
+    # flake8-pytest-style
+    "PT",
+    # ruff-specific-rules-ruf
+    "RUF",
     # flake8-bandit
     "S",
     # flake8-tidy-imports
     "TID",
+    # tryceratops-try
+    "TRY",
     # flake8-print
     "T20",
+    # pyupgrade-up
+    "UP",
     # pycodestyle warnings
     "W",
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**.py" = ["S"]
-
-[tool.coverage.run]
-source = [
-  "./{{project_name}}/",
-]
-omit = [
-  "*/tests/*"
+"tests/**.py" = [
+    "S",
+    # too-many-positional-arguments | needed for fixtures
+    "PLR0917",
 ]

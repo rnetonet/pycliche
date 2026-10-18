@@ -1,14 +1,15 @@
 # Test the custom validators defined for certain questions in `copier.yaml`.
 
 
-from typing import Callable
+import re
+from collections.abc import Callable
 
 import pytest
 
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "question, answer, error_msg",
+    ("question", "answer", "error_msg"),
     [
         ("author_name", "Francisco de Quevedo", None),
         ("author_name", "", "author_name cannot be empty"),
@@ -16,7 +17,7 @@ import pytest
         ("initial_version", "", "Must have value"),
     ],
 )
-def test_validator_is_empty(
+def test_required_fields_validator(
     question: str,
     answer: str,
     error_msg: str | None,
@@ -35,17 +36,17 @@ def test_validator_is_empty(
         try:
             _copier_copy_with_project_name()
         except Exception as e:
-            pytest.fail(f"Unexpected exception raised: {str(e)}")
+            pytest.fail(f"Unexpected exception raised: {e!s}")
 
     else:
-        with pytest.raises(ValueError) as exc_info:
+        with pytest.raises(ValueError, match=rf".*{re.escape(error_msg)}$") as exc_info:
             _copier_copy_with_project_name()
         assert str(exc_info.value).endswith(error_msg)
 
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "project_name, should_raise",
+    ("project_name", "should_raise"),
     [
         ("ok_project", False),
         ("MyProjectName", True),
@@ -73,7 +74,7 @@ def test_validator_project_name(
     )
 
     if should_raise:
-        with pytest.raises(ValueError) as exc_info:
+        with pytest.raises(ValueError, match=re.escape(expected_error_msg)) as exc_info:
             _copier_copy_with_project_name()
         assert str(exc_info.value) == expected_error_msg
 
@@ -81,12 +82,12 @@ def test_validator_project_name(
         try:
             _copier_copy_with_project_name()
         except Exception as e:
-            pytest.fail(f"Unexpected exception raised: {str(e)}")
+            pytest.fail(f"Unexpected exception raised: {e!s}")
 
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "author_email, should_raise",
+    ("author_email", "should_raise"),
     [
         ("user@example.com", False),
         ("broken@email", True),
@@ -114,7 +115,7 @@ def test_validator_author_email(
     )
 
     if should_raise:
-        with pytest.raises(ValueError) as exc_info:
+        with pytest.raises(ValueError, match=re.escape(expected_error_msg)) as exc_info:
             _copier_copy_with_author_email()
         assert str(exc_info.value) == expected_error_msg
 
@@ -122,4 +123,4 @@ def test_validator_author_email(
         try:
             _copier_copy_with_author_email()
         except Exception as e:
-            pytest.fail(f"Unexpected exception raised: {str(e)}")
+            pytest.fail(f"Unexpected exception raised: {e!s}")

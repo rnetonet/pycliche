@@ -13,48 +13,62 @@ on:
 
 jobs:
   pre_commit:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/pre-commit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: ./.github/actions/prek
 
   generate-nox-py-versions:
-    needs:
-      - pre_commit
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       py_version: ${{ steps.set-matrix.outputs.py_version }}
     steps:
-    - uses: actions/checkout@v5
-    - uses: wntrblm/nox@main
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+    - name: Cache nox Python versions list
+      id: cache-nox-py-versions
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      with:
+        path: .nox-py-versions.json
+        key: nox-py-versions-${{ runner.os }}-${{ hashFiles('noxfile.py', 'pyproject.toml') }}
+    - uses: wntrblm/nox@a976d7ee04ab7a13634adc1016d4755a1348225f # 2026.08.17
+      if: steps.cache-nox-py-versions.outputs.cache-hit != 'true'
     - id: set-matrix
       shell: bash
+      env:
+        CACHE_PY_VERSIONS_HIT: ${{ steps.cache-nox-py-versions.outputs.cache-hit }}
       run: |
         # Extract Python versions from nox session names (both selected and skipped)
         # into a JSON array. Session lines start with '*' or '-'.
-        py_version_json="$(
-        nox --list \
-            | grep -E '^[*-] ' \
-            | cut -d' ' -f2 \
-            | sed 's/^tests-//' \
-            | jq -R -s -c 'split("\n")[:-1]'
-        )"
+        if [[ $CACHE_PY_VERSIONS_HIT == "true" ]]; then
+          py_version_json="$(cat .nox-py-versions.json)"
+        else
+          py_version_json="$(
+            nox --list \
+              | grep -E '^[*-] ' \
+              | cut -d' ' -f2 \
+              | sed 's/^tests-//' \
+              | jq -R -s -c 'split("\n")[:-1]'
+          )"
+          echo "$py_version_json" > .nox-py-versions.json
+        fi
         echo "py_version=$py_version_json" >> "$GITHUB_OUTPUT"
 
   test:
     needs:
+      - pre_commit
       - generate-nox-py-versions
     strategy:
       fail-fast: false
       matrix:
         py_version: ${{ fromJson(needs.generate-nox-py-versions.outputs.py_version) }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
-          version: "0.6.17"
-      - uses: wntrblm/nox@2025.05.01
+          version: "0.12.9"
+          enable-cache: true
+      - uses: wntrblm/nox@a976d7ee04ab7a13634adc1016d4755a1348225f # 2026.08.17
         with:
           python-versions: "${{ matrix.py_version }}"
       - run: nox --session "tests-${{ matrix.py_version }}"

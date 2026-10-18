@@ -1,12 +1,13 @@
 import json
 import os
 import re
+import tomllib
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 import pytest
 import yaml
-from sh import ErrorReturnCode, git, python, uv
+from sh import ErrorReturnCode, git, uv
 from sh import pytest as sh_pytest
 
 from tests._utils import count_dirs_and_files
@@ -47,10 +48,11 @@ def test_pycliche_jinja_templates_converted(
 
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "is_github_project, expected_directory_count, expected_file_count",
-    [(True, 4, 15), (False, 3, 13)],
+    ("is_github_project", "expected_directory_count", "expected_file_count"),
+    [(True, 4, 17), (False, 3, 15)],
 )
-def test_is_github_project(
+# ruff: noqa: PLR0913
+def test_github_project_flag_affects_file_structure(
     is_github_project: bool,
     expected_directory_count: int,
     expected_file_count: int,
@@ -76,6 +78,7 @@ def test_version_is_importable(
     install_test_project,
     test_project_name: str,
 ):
+    # ruff: noqa: PLC0415
     from importlib.metadata import version
 
     assert version(test_project_name) == "0.0.0"
@@ -87,7 +90,11 @@ def test_entrypoint_logs_info(
     install_test_project,
     test_project_name: str,
 ):
-    result = python("-m", f"{test_project_name}.main")
+    from sh import Command
+
+    # Test the CLI entrypoint script defined in [project.scripts]
+    project_cmd = Command(test_project_name)
+    result = project_cmd()
 
     json_stdout = json.loads(result)
     assert re.match(rf"{test_project_name}", json_stdout["event"]), (
@@ -100,20 +107,39 @@ def test_entrypoint_logs_info(
 
 
 @pytest.mark.integration
+def test_generated_toml_is_valid(
+    copier_copy: Callable[[dict], None],
+    copier_input_data: dict,
+    test_project_dir: Path,
+):
+    copier_copy(copier_input_data)
+
+    toml_files = list(test_project_dir.rglob("*.toml"))
+    assert toml_files, "No TOML files found in the generated project."
+
+    for file_path in toml_files:
+        try:
+            with open(file_path, "rb") as f:  # must be binary for tomllib
+                tomllib.load(f)
+        except tomllib.TOMLDecodeError as e:
+            pytest.fail(f"Invalid TOML file: {file_path}\nError: {e}")
+
+
+@pytest.mark.integration
 def test_generated_yaml_is_valid(
     copier_copy: Callable[[dict], None],
     copier_input_data: dict,
     test_project_dir: Path,
 ):
-    yaml_files = [
-        test_project_dir / ".markdownlint-cli2.yaml",
-        test_project_dir / ".pre-commit-config.yaml",
-    ]
-
     copier_copy(copier_input_data)
 
+    yaml_files = list(test_project_dir.rglob("*.yaml")) + list(
+        test_project_dir.rglob("*.yml")
+    )
+    assert yaml_files, "No YAML files found in the generated project."
+
     for file_path in yaml_files:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             try:
                 yaml.safe_load(f)
             except yaml.YAMLError as e:
@@ -157,21 +183,21 @@ def test_generated_project_pre_commit_hooks_run_successfully(
 ):
     copier_copy(copier_input_data)
 
-    # pre-commit will only run against files tracked by git
+    # prek will only run against files tracked by git
     git("init", _cwd=test_project_dir)
     git("add", ".", _cwd=test_project_dir)
 
     env = os.environ.copy()
     env["SKIP"] = "no-commit-to-branch"
-    pre_commit_res = uv(
+    prek_res = uv(
         "run",
-        "pre-commit",
+        "prek",
         "run",
         "--all-files",
         _cwd=test_project_dir,
         _env=env,
         _return_cmd=True,
     )
-    assert pre_commit_res.exit_code == 0, (
-        f"Pre-commit hooks failed:\n{pre_commit_res.stdout}\n{pre_commit_res.stderr}"
+    assert prek_res.exit_code == 0, (
+        f"prek pre-commit hooks failed:\n{prek_res.stdout}\n{prek_res.stderr}"
     )
